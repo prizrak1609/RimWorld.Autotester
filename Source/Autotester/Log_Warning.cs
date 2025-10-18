@@ -12,13 +12,6 @@ namespace Autotester;
 [HarmonyPatch(typeof(Log), nameof(Log.Warning))]
 public static class Log_Warning
 {
-    private static readonly string[] allowedStrings =
-    [
-        "Scatterer",
-        "SoS2 compatibility will happen soon",
-        "Parsed "
-    ];
-
     public static void Prefix(ref string text, out bool __state)
     {
         __state = false;
@@ -53,7 +46,7 @@ public static class Log_Warning
         }
 
         var warningText = text;
-        if (allowedStrings.Any(allowedString => warningText.Contains(allowedString)))
+        if (Main.AllowedWarnings.Any(allowedString => warningText.Contains(allowedString)))
         {
             return;
         }

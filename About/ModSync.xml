@@ -2,7 +2,7 @@
 <ModSyncNinjaData>
   <ID>b742d599-958f-45e7-a496-e33d2629aab3</ID>
   <ModName>Autotester</ModName>
-  <Version>1.6.10</Version>
+  <Version>1.6.11</Version>
   <SaveBreaking>False</SaveBreaking>
   <Host name="Github">
     <Owner>emipa606</Owner>

@@ -6,16 +6,16 @@
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <DebugType>None</DebugType>
     <LangVersion>latest</LangVersion>
-    <FileVersion>1.6.10</FileVersion>
+    <FileVersion>1.6.11</FileVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <!--<PackageReference Include="Krafs.Rimworld.Ref"><Version>1.6.4538-beta</Version>
+    <!--<PackageReference Include="Krafs.Rimworld.Ref"><Version>1.6.4612-beta</Version>
       <ExcludeAssets>runtime</ExcludeAssets>
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>-->
     <PackageReference Include="Lib.Harmony">
-      <Version>*</Version>
+      <Version>2.4.1</Version>
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <Reference Include="Rimworld">

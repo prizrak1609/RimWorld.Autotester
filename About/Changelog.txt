@@ -1,5 +1,8 @@
 # Changelog for Autotester
 
+1.6.11 - Added config-file where warnings and errors can be added to ignore them during testing.
+
+
 1.6.10 - Added exclusion for jecstools bug
 
 

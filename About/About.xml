@@ -28,7 +28,7 @@
     <li>brrainz.harmony</li>
     <li>Mlie.SpawnModContent</li>
   </loadAfter>
-  <description>[img]https://i.imgur.com/iCj5o7O.png[/img]
+  <description>[img]https://i.postimg.cc/PJc4kLbg/Self-Info.png[/img]
 
 I made this to ease my testing of mods before publishing. A few people asked about it so I decided to publish it. 
 If you are not a modder this is probably not of any use to you and for most modders the [url=https://steamcommunity.com/workshop/filedetails/?id=2922590693]Spawn Mod Content[/url]-mod should be enough for testing.
@@ -52,20 +52,20 @@ This will contain English translation-data for all Defs as a template for other 
 
 [table]
 	[tr]
-		[td][url=https://discord.gg/h5TY6DA][img]https://i.imgur.com/zdzzBrc.png[/img][/url][/td]
-		[td][url=https://github.com/emipa606/Autotester][img]https://i.imgur.com/kTkpTOE.png[/img][/url][/td]
+		[td][url=https://discord.gg/h5TY6DA][img]https://i.postimg.cc/T1h9SjbF/Discord.png[/img][/url][/td]
+		[td][url=https://github.com/emipa606/Autotester][img]https://i.postimg.cc/fykKF7X4/Github.png[/img][/url][/td]
     [/tr]
     [tr]
-        [td][img]https://i.imgur.com/WjDSfUn.png[/img][/td]
-        [td][img]https://i.imgur.com/h5VwTNL.png[/img][/td]
+        [td][img]https://i.postimg.cc/MHXD40RW/Safe-To-Add.png[/img][/td]
+        [td][img]https://i.postimg.cc/sx1c8PSf/Safe-To-Remove.png[/img][/td]
     [/tr]
 [/table]
 
-[img]https://i.imgur.com/5xwDG6H.png[/img]
+[img]https://i.postimg.cc/cC6mj7Y4/Self-Reporting-Issues.png[/img]
 [list]
 [*] See if the the error persists if you just have this mod and its requirements active.
 [*] If not, try adding your other mods until it happens again.
-[*] Post your error-log using the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2873415404]Log Uploader[/url] or the standalone [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2873415404]Uploader[/url] and command Ctrl+F12
+[*] Always post your log using the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2873415404]Log Uploader[/url]
 [*] For best support, please use the Discord-channel for error-reporting.
 [*] Do not report errors by making a discussion-thread, I get no notification of that.
 [*] If you have the solution for a problem, please post it to the GitHub repository.
@@ -73,5 +73,5 @@ This will contain English translation-data for all Defs as a template for other 
 [/list] 
 
 [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3497629017][img]https://img.shields.io/github/v/release/emipa606/Autotester?label=latest%20version&amp;style=plastic&amp;labelColor=0070cd&amp;color=white[/img][/url] | tags:  automatic testing</description>
-  <modVersion IgnoreIfNoMatchingField="True">1.6.10</modVersion>
+  <modVersion IgnoreIfNoMatchingField="True">1.6.11</modVersion>
 </ModMetaData>

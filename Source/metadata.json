@@ -2,7 +2,7 @@
   "Continued": false,
   "CanAdd": "0",
   "CanRemove": "0",
-  "LastXmlCleaning": "2025-08-01T20:56:42.1733358+02:00",
+  "LastXmlCleaning": "2025-10-18T21:51:10.0068632+02:00",
   "SocialImageSet": true,
   "FundingSet": true,
   "SearchTags": " automatic testing",
@@ -10,7 +10,7 @@
   "Patches": false,
   "Defs": false,
   "Assemblies": true,
-  "LinesOfCode": 11706,
+  "LinesOfCode": 14468,
   "LinesOfXML": 0,
   "CodeBaseSize": 64
 }
