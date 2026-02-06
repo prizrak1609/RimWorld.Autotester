@@ -34,6 +34,5 @@ public static class Log_Error
 
         Debug.LogError(StackTraceUtility.ExtractStackTrace());
         Debug.LogError("[[Autotest failed]]");
-        Process.GetCurrentProcess().Kill();
     }
 }

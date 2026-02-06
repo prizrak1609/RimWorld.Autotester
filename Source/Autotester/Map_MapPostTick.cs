@@ -81,7 +81,6 @@ public static class Map_MapPostTick
                 }
 
                 Log.Message("[Autotester]: Nothing more to test, shutting down.");
-                Process.GetCurrentProcess().Kill();
                 return;
             }
 
