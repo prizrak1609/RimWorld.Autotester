@@ -1,0 +1,24 @@
+"workshopitem"
+{
+	"appid"		"294100"
+	"contentfolder"		"E:\GitProjects\Autotester"
+	"previewfile"		"E:\GitProjects\Autotester\About\Preview.png"
+	"visibility"		"0"
+	"title"		"Autotester Forked"
+	"description"		"
+It is a fork of original mod [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3497629017]Autotester[/url]
+
+[h3]Changes[/h3]
+[list]
+[*]Removed game close on warning or error (you could see the error in game logs)
+[*]Added options for: generating translation report, spawn mod items, open mod options, change map size(minimum size is 100)
+[*]It spawns content of all active mods one by one(except DLC)
+[/list]
+
+Settings file is located in the mod config-folder and compatible with original mod, filename ends with '3668363654_Autotester.xml'.
+Here described how to find config: [url=https://ludeon.com/forums/index.php?topic=50995.0]https://ludeon.com/forums/index.php?topic=50995.0[/url]
+
+[quote] [b]Warning:[/b] Because of the war in my country, electricity has become quite unpredictable. This means updates will come a bit slower than usual. Thank you for your support and for understanding my situation.[/quote]"
+	"changenote"		"version 1.0.0"
+	"publishedfileid"		"3668363654"
+}
