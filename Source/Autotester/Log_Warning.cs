@@ -78,6 +78,5 @@ public static class Log_Warning
 
         Debug.LogWarning(StackTraceUtility.ExtractStackTrace());
         Debug.LogError("[[Autotest failed]]");
-        Process.GetCurrentProcess().Kill();
     }
 }
