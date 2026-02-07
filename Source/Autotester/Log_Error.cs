@@ -13,23 +13,11 @@ public static class Log_Error
     public static void Prefix(ref string text, out bool __state)
     {
         __state = false;
-        var errorText = text;
-
-        if (Main.AllowedErrors.Any(errorText.Contains))
-        {
-            return;
-        }
-
-        __state = true;
+        text = $"[ERROR]: {text}";
     }
 
     public static void Postfix(bool __state)
     {
-        if (!__state)
-        {
-            return;
-        }
-
         Debug.LogError(StackTraceUtility.ExtractStackTrace());
         Debug.LogError("[[Autotest failed]]");
     }
