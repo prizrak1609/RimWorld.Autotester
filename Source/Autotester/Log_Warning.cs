@@ -15,18 +15,10 @@ public static class Log_Warning
     public static void Prefix(ref string text, out bool __state)
     {
         __state = false;
-        if (text.Contains(" causes compatibility errors by overwriting "))
-        {
-            var modName = LoadedModManager.RunningMods.Last()?.Name;
-            if (text.StartsWith("[") && !text.StartsWith($"[{modName}]"))
-            {
-                return;
-            }
-        }
 
         text = $"[WARNING]: {text}";
 
-        if (text.Contains("Translation data for language"))
+        if (text.Contains("Translation data for language") && Settings.GenerateTranslationReport)
         {
             var saveLocation = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             if (text.NullOrEmpty())
@@ -36,32 +28,14 @@ public static class Log_Warning
 
             saveLocation = Path.Combine(saveLocation, "TranslationReport.txt");
 
-            text += $"{Environment.NewLine}Generated translation report to {saveLocation}, opening.";
+            text += $"{Environment.NewLine}Generated translation report to {saveLocation}.";
             LanguageReportGenerator.SaveTranslationReport();
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = saveLocation,
-                UseShellExecute = true
-            });
         }
-
-        var warningText = text;
-        if (Main.AllowedWarnings.Any(allowedString => warningText.Contains(allowedString)))
-        {
-            return;
-        }
-
-        __state = true;
     }
 
     public static void Postfix(bool __state)
     {
-        if (!__state)
-        {
-            return;
-        }
-
         Debug.LogWarning(StackTraceUtility.ExtractStackTrace());
-        Debug.LogError("[[Autotest failed]]");
+        Debug.LogWarning("[[Autotest failed]]");
     }
 }

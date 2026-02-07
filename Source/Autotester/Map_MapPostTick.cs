@@ -12,225 +12,232 @@ namespace Autotester;
 [HarmonyPatch(typeof(Map), "MapPostTick")]
 public static class Map_MapPostTick
 {
-    private static bool defsLoaded;
-    private static bool optionsShown;
-    private static bool closeModOptions;
-    private static bool cleanupFinished = false;
-    private static bool allModsSpawned = false;
+    private static bool allowNextState = true;
     private static List<Thing> allSpawnedThings;
-    private static int currentThingIndexSelected;
+    private static int currentThingIndexSelected = 0;
     private static int currentModIndexSelected = 0;
+	private static float secondsDelay = 2;
+    private static int state = -1;
+	private static bool allModsSpawned = false;
+    private static List<String> ludeonMods = new List<string>() { "Anomaly", "Biotech", "Core", "Ideology", "Odyssey", "Royalty" };
 
-	public static void Postfix()
+    public static void Postfix()
 	{
-		var autoTestMethod =
-				AccessTools.Method("SpawnModContent.DebugAutotests:SpawnModDefs", [typeof(ModContentPack)]);
-		if (autoTestMethod == null)
+        if (currentModIndexSelected >= LoadedModManager.RunningMods.Count())
+        {
+            return;
+        }
+
+        var ticks = GenTicks.TicksPerRealSecond * secondsDelay;
+		if (GenTicks.TicksGame % ticks == 0)
 		{
-			Log.Message($"[Autotester]: SpawnModContent not found.");
-			return;
+			if (allowNextState)
+			{
+				allowNextState = false;
+				state++;
+			}
 		}
-
-		if (currentModIndexSelected >= LoadedModManager.RunningMods.Count() && !allModsSpawned)
-		{
-			Log.Message($"[Autotester]: Spawning all items from all mods.");
-			autoTestMethod.Invoke(null, LoadedModManager.RunningMods.ToArray());
-			Current.CameraDriver.SetRootPosAndSize(Current.CameraDriver.MapPosition.ToVector3(), 60f);
-
-			allModsSpawned = true;
-		}
-
-		if (allModsSpawned)
+		else
 		{
 			return;
 		}
 
         ModContentPack modBeingTested = LoadedModManager.RunningMods.ElementAt(currentModIndexSelected);
-		if (defsLoaded)
+
+		if (ludeonMods.Contains(modBeingTested.Name))
 		{
-			if (allSpawnedThings == null)
-			{
-				allSpawnedThings = Find.CurrentMap.listerThings.AllThings
-					.Where(thing => thing.def.modContentPack == modBeingTested).ToList();
-			}
-
-            if (allSpawnedThings.Empty())
-            {
-                reset();
-                Log.Message($"[Autotester]: No valid items found on the map from {modBeingTested.Name}.");
-                return;
-            }
-
-            if (GenTicks.TicksGame < 60 || GenTicks.TicksGame % 5 != 0)
-			{
-				return;
-			}
-
-			if (allSpawnedThings.Count == currentThingIndexSelected && !cleanupFinished)
-			{
-				//modBeingTested = LoadedModManager.RunningMods.Last();
-				var defInjectMethodInfo =
-					AccessTools.Method(typeof(TranslationFilesCleaner), "CleanupDefInjectionsForDefType");
-				var folderPath = Path.Combine(modBeingTested.RootDir, "Source", "TranslationTemplate");
-				var dir = new DirectoryInfo(folderPath);
-				var mod = modBeingTested.ModMetaData;
-				Log.Message($"[Autotester]: Generating translation template to folder {dir.FullName}.");
-				if (!dir.Exists)
-				{
-					dir.Create();
-				}
-
-				var files = dir.GetFiles("*.xml", SearchOption.AllDirectories);
-				foreach (var langFile in files)
-				{
-					try
-					{
-						langFile.Delete();
-					}
-					catch (Exception ex)
-					{
-						Log.Error($"Could not delete {langFile.Name}: {ex}");
-					}
-				}
-
-				foreach (var defType in GenDefDatabase.AllDefTypesWithDatabases())
-				{
-					try
-					{
-						defInjectMethodInfo.Invoke(null, [defType, dir.FullName, mod]);
-					}
-					catch (Exception ex2)
-					{
-						Log.Error($"Could not process def-injections for type {defType.Name}: {ex2}");
-					}
-				}
-
-				cleanupFinished = true;
-                Log.Message("[Autotester]: Nothing more to test, shutting down.");
-				return;
-			}
-
-			Find.Selector.ClearSelection();
-			if (currentThingIndexSelected >= allSpawnedThings.Count)
-			{
-                reset();
-                return;
-			}
-            var thing = allSpawnedThings[currentThingIndexSelected];
-			currentThingIndexSelected++;
-			if (thing is not { Spawned: true })
-			{
-				return;
-			}
-
-			Log.Message($"[Autotester]: Selecting {thing.Label} ({thing.def.defName}).");
-			Find.Selector.Select(thing);
+			nextMod();
 			return;
-		}
+        }
 
-		//if (!logShown && GenTicks.TicksGame > 25)
-		//{
-		//	Log.TryOpenLogWindow();
-		//	logShown = true;
-		//	return;
-		//}
+        Log.Message($"[Autotester]: Mod index  {currentModIndexSelected}  \"{modBeingTested.Name}\": checking thing index  {currentThingIndexSelected}");
 
-		if (GenTicks.TicksGame < 15)
+        switch (state)
 		{
-			return;
-		}
+			case 0:
+                Log.Message($"[Autotester]: ------------------------------ Testing {modBeingTested.Name} ------------------------------");
+                showOptions(modBeingTested);
+				break;
+			case 1: closeOptions(); break;
+            case 2: spawnItems(modBeingTested); break;
+            case 3: loadDefs(modBeingTested); break;
+			case 4: 
+				Log.Message($"[Autotester]: ------------------------------ Finished testing {modBeingTested.Name} ------------------------------");
+				nextState(1);
+                break;
+			default: nextMod(); break;
+        }
+	}
 
-		// modBeingTested = LoadedModManager.RunningMods.Last();
-		// if (modBeingTested == null)
-		// {
-		//     defsLoaded = true;
-		//     allSpawnedThings = [];
-		//     Log.Message("[Autotester]: Cannot find any mod.");
-		//     return;
-		// }
-
-		if (!optionsShown)
+    private static void showOptions(ModContentPack modBeingTested)
+	{
+		if (Settings.OpenModOptions == false)
 		{
-			// modBeingTested = LoadedModManager.RunningMods.Last();
-			optionsShown = true;
-
-			var modObject =
-				LoadedModManager.ModHandles.FirstOrDefault(mod => mod.Content.PackageId == modBeingTested.PackageId);
-			if (modObject == null)
-			{
-				Log.Message($"[Autotester]: {modBeingTested.Name} modhandle could not be found.");
-				return;
-			}
-
-			if (string.IsNullOrEmpty(modObject.SettingsCategory()))
-			{
-				Log.Message($"[Autotester]: {modBeingTested.Name} has no mod-settings.");
-				return;
-			}
-
-			var settingsWindow = new Dialog_Options(modObject)
-			{
-				forcePause = false
-			};
-			Find.WindowStack.Add(settingsWindow);
-
-			closeModOptions = true;
-			return;
-		}
-
-		if (GenTicks.TicksGame < 30)
-		{
-			return;
-		}
-
-		if (closeModOptions)
-		{
-			closeModOptions = false;
-			Find.WindowStack.TryRemove(typeof(Dialog_Options));
-			return;
-		}
-
-		if (GenTicks.TicksGame < 45)
-		{
-			return;
-		}
-
-		defsLoaded = true;
-
-		if (!modBeingTested.AllDefs.Any())
-		{
-            Log.Message($"[Autotester]: ------------------------------ Testing {modBeingTested.Name} ------------------------------");
-            Log.Message($"[Autotester]: {modBeingTested.Name} does not have anything to spawn.");
-            reset();
+            Log.Message($"[Autotester]: {modBeingTested.Name} skipping opening options.");
+            nextState(1);
             return;
 		}
-		else
+
+		var modObject =
+			LoadedModManager.ModHandles.FirstOrDefault(mod => mod.Content.PackageId == modBeingTested.PackageId);
+		if (modObject == null)
 		{
-			Log.Message($"[Autotester]: ------------------------------ Testing {modBeingTested.Name} ------------------------------");
+			Log.Message($"[Autotester]: {modBeingTested.Name} modhandle could not be found.");
+            nextState(1);
+            return;
+		}
+
+		if (string.IsNullOrEmpty(modObject.SettingsCategory()))
+		{
+			Log.Message($"[Autotester]: {modBeingTested.Name} has no mod-settings.");
+			nextState(1);
+			return;
+		}
+
+		var settingsWindow = new Dialog_Options(modObject)
+		{
+			forcePause = false
+		};
+		Find.WindowStack.Add(settingsWindow);
+
+        nextState(2);
+    }
+
+	private static void nextState(float delay)
+	{
+		secondsDelay = delay;
+        allowNextState = true;
+    }
+
+	private static void closeOptions()
+	{
+		while (Find.WindowStack.IsOpen<Dialog_Options>())
+		{
+			Find.WindowStack.TryRemove(typeof(Dialog_Options));
+		}
+        nextState(1);
+    }
+
+	private static void spawnItems(ModContentPack modBeingTested)
+	{
+		if (Settings.SpawnModItems == false)
+		{
+            Log.Message($"[Autotester]: {modBeingTested.Name} skipping spawning mod items.");
+            nextState(1);
+            return;
+		}
+
+		var autoTestMethod =
+				AccessTools.Method("SpawnModContent.DebugAutotests:SpawnModDefs", [typeof(ModContentPack)]);
+		if (autoTestMethod == null)
+		{
+			Log.Message($"[Autotester]: SpawnModContent not found.");
+			nextState(1);
+			return;
 		}
 
 		Log.Message($"[Autotester]: Spawning all items from {modBeingTested.Name}.");
-		autoTestMethod.Invoke(null, [modBeingTested]);
+		try
+		{
+			autoTestMethod.Invoke(null, [modBeingTested]);
+		}
+		catch (Exception ex)
+		{
+			Log.Error($"Failed to spawn items from mod \"{modBeingTested.Name}\": {ex}");
+            nextState(1);
+			return;
+        }
+
 		Current.CameraDriver.SetRootPosAndSize(Current.CameraDriver.MapPosition.ToVector3(), 60f);
 
-		if (GenTicks.TicksGame < 60)
+		nextState(5);
+	}
+
+    private static void loadDefs(ModContentPack modBeingTested)
+	{
+		if (allSpawnedThings == null || allSpawnedThings.Empty())
+		{
+			allSpawnedThings = Find.CurrentMap.listerThings.AllThings
+				.Where(thing => thing.def.modContentPack == modBeingTested && thing.def.defName != "PowerConduit").ToList();
+		}
+
+		if (allSpawnedThings.Empty())
+		{
+			nextState(1);
+			Log.Message($"[Autotester]: No valid items found on the map from {modBeingTested.Name}.");
+			return;
+		}
+
+		if (allSpawnedThings.Count == currentThingIndexSelected)
+		{
+			if (Settings.GenerateTranslationTemplatePerMod == false)
+			{
+                Log.Message($"[Autotester]: {modBeingTested.Name} skippinggenerating translation info.");
+                nextState(1);
+                return;
+			}
+
+            var defInjectMethodInfo =
+                    AccessTools.Method(typeof(TranslationFilesCleaner), "CleanupDefInjectionsForDefType");
+            var folderPath = Path.Combine(modBeingTested.RootDir, "Source", "TranslationTemplate");
+            var dir = new DirectoryInfo(folderPath);
+            var mod = modBeingTested.ModMetaData;
+            Log.Message($"[Autotester]: Generating translation template to folder {dir.FullName}.");
+            if (!dir.Exists)
+            {
+                dir.Create();
+            }
+
+            var files = dir.GetFiles("*.xml", SearchOption.AllDirectories);
+            foreach (var langFile in files)
+            {
+                try
+                {
+                    langFile.Delete();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"Could not delete {langFile.Name}: {ex}");
+                }
+            }
+
+            foreach (var defType in GenDefDatabase.AllDefTypesWithDatabases())
+            {
+                try
+                {
+                    defInjectMethodInfo.Invoke(null, [defType, dir.FullName, mod]);
+                }
+                catch (Exception ex2)
+                {
+                    Log.Error($"Could not process def-injections for type {defType.Name}: {ex2}");
+                }
+            }
+
+            Log.Message("[Autotester]: Nothing more to test, proceed with next mode.");
+			nextState(1);
+			return;
+		}
+
+		Find.Selector.ClearSelection();
+		
+		var thing = allSpawnedThings[currentThingIndexSelected];
+		currentThingIndexSelected++;
+		if (thing is not { Spawned: true })
 		{
 			return;
 		}
 
-		Log.Message($"[Autotester]: ------------------------------ Finished testing {modBeingTested.Name} ------------------------------");
-		reset();
+		secondsDelay = 0.5f;
+		Log.Message($"[Autotester]: Selecting {thing.Label} ({thing.def.defName}).");
+		Find.Selector.Select(thing);
 	}
 
-	private static void reset()
+    private static void nextMod()
 	{
-		defsLoaded = false;
-		optionsShown = false;
-		closeModOptions = false;
-		cleanupFinished = false;
-		allModsSpawned = false;
+		state = -1;
+		allowNextState = true;
 		allSpawnedThings = [];
 		currentThingIndexSelected = 0;
-		//int currentModIndexSelected = 0;
+		currentModIndexSelected++;
 	}
 }

@@ -8,6 +8,9 @@ public static class Root_Play_SetupForQuickTestPlay
 {
     public static void Postfix()
     {
-        Find.GameInitData.mapSize = 100;
+        if (Settings.MapSize != 0)
+        {
+            Find.GameInitData.mapSize = Settings.MapSize;
+        }
     }
 }
