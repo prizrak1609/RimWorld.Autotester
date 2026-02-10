@@ -1,13 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <name>Autotester</name>
-  <packageId>Mlie.Autotester</packageId>
-  <author>Mlie</author>
-  <url>https://github.com/emipa606/Autotester</url>
+  <name>Autotester Forked</name>
+  <packageId>Geel.Autotester.Forked</packageId>
+  <author>Geel</author>
+  <url>https://github.com/prizrak1609/RimWorld.Autotester</url>
   <supportedVersions>
-    <li>1.3</li>
-    <li>1.4</li>
-    <li>1.5</li>
     <li>1.6</li>
   </supportedVersions>
   <modDependencies>
@@ -28,50 +25,18 @@
     <li>brrainz.harmony</li>
     <li>Mlie.SpawnModContent</li>
   </loadAfter>
-  <description>[img]https://i.postimg.cc/PJc4kLbg/Self-Info.png[/img]
+  <description>
+It is a fork of original mod [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3497629017]Autotester[/url]
 
-I made this to ease my testing of mods before publishing. A few people asked about it so I decided to publish it. 
-If you are not a modder this is probably not of any use to you and for most modders the [url=https://steamcommunity.com/workshop/filedetails/?id=2922590693]Spawn Mod Content[/url]-mod should be enough for testing.
-However if you have a lot of mods, it might help with automatic testing of these mods.
-
-[h3]How to use[/h3]
+[h3]Changes[/h3]
 [list]
-[*]Populate the mod-list outside of the game, with the mod you want to test at the last place in the mod-list
-[*]Start RimWorld with the -quicktest parameter causing it to go directly to a default test map
-[*]With this mod loaded the test-map will be smaller (100x100) to increase map-load speed
-[*]The mod will open and close any mod-config of the test-mod
-[*]It will will use the Spawn Mod Content-mod to spawn everything
-[*]It will then in turn select each item spawned
-[*]When there are no more items it will close the game
+[*]Removed game close on warning or error (you could see the error in game logs)
+[*]Added options for: generating translation report, spawn mod items, open mod options, change map size(minimum size is 100)
+[*]It spawns content of all active mods one by one
 [/list]
 
-If there are any warnings or errors it will close the game instantly.
-All warnings and errors will have a [Warning] or [Error] prefix in the log to find them easy.
-It will also create a TranslationTemplate folder in the Source-folder of the mod.
-This will contain English translation-data for all Defs as a template for other languages.
-
-[table]
-	[tr]
-		[td][url=https://discord.gg/h5TY6DA][img]https://i.postimg.cc/T1h9SjbF/Discord.png[/img][/url][/td]
-		[td][url=https://github.com/emipa606/Autotester][img]https://i.postimg.cc/fykKF7X4/Github.png[/img][/url][/td]
-    [/tr]
-    [tr]
-        [td][img]https://i.postimg.cc/MHXD40RW/Safe-To-Add.png[/img][/td]
-        [td][img]https://i.postimg.cc/sx1c8PSf/Safe-To-Remove.png[/img][/td]
-    [/tr]
-[/table]
-
-[img]https://i.postimg.cc/cC6mj7Y4/Self-Reporting-Issues.png[/img]
-[list]
-[*] See if the the error persists if you just have this mod and its requirements active.
-[*] If not, try adding your other mods until it happens again.
-[*] Always post your log using the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2873415404]Log Uploader[/url]
-[*] For best support, please use the Discord-channel for error-reporting.
-[*] Do not report errors by making a discussion-thread, I get no notification of that.
-[*] If you have the solution for a problem, please post it to the GitHub repository.
-[*] Use [url=https://github.com/RimSort/RimSort/releases/latest]RimSort[/url] to sort your mods
-[/list] 
-
-[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3497629017][img]https://img.shields.io/github/v/release/emipa606/Autotester?label=latest%20version&amp;style=plastic&amp;labelColor=0070cd&amp;color=white[/img][/url] | tags:  automatic testing</description>
-  <modVersion IgnoreIfNoMatchingField="True">1.6.11</modVersion>
+Settings file is located in the mod config-folder, filename ending with "Autotester.xml".
+[url=https://ludeon.com/forums/index.php?topic=50995.0]https://ludeon.com/forums/index.php?topic=50995.0[/url]
+</description>
+  <modVersion IgnoreIfNoMatchingField="True">1.0.0</modVersion>
 </ModMetaData>
