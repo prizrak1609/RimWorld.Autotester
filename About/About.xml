@@ -32,7 +32,7 @@ It is a fork of original mod [url=https://steamcommunity.com/sharedfiles/filedet
 [list]
 [*]Removed game close on warning or error (you could see the error in game logs)
 [*]Added options for: generating translation report, spawn mod items, open mod options, change map size(minimum size is 100)
-[*]It spawns content of all active mods one by one
+[*]It spawns content of all active mods one by one(except DLC)
 [/list]
 
 Settings file is located in the mod config-folder, filename ending with "Autotester.xml".
