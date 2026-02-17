@@ -35,8 +35,8 @@ It is a fork of original mod [url=https://steamcommunity.com/sharedfiles/filedet
 [*]It spawns content of all active mods one by one(except DLC)
 [/list]
 
-Settings file is located in the mod config-folder, filename ending with "Autotester.xml".
-[url=https://ludeon.com/forums/index.php?topic=50995.0]https://ludeon.com/forums/index.php?topic=50995.0[/url]
+Settings file is located in the mod config-folder and compatible with original mod, filename ending with "Autotester.xml".
+Here described how to find config: [url=https://ludeon.com/forums/index.php?topic=50995.0]https://ludeon.com/forums/index.php?topic=50995.0[/url]
 </description>
   <modVersion IgnoreIfNoMatchingField="True">1.0.0</modVersion>
 </ModMetaData>
