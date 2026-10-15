@@ -12,6 +12,7 @@ namespace Autotester;
 [HarmonyPatch(typeof(Map), "MapPostTick")]
 public static class Map_MapPostTick
 {
+	private static String spawnModDefsStr = "SpawnModContent.DebugAutotests:spawnModDefs"
     private static bool allowNextState = true;
     private static List<Thing> allSpawnedThings;
     private static int currentThingIndexSelected = 0;
@@ -28,6 +29,14 @@ public static class Map_MapPostTick
             return;
         }
 
+        ModContentPack modBeingTested = LoadedModManager.RunningMods.ElementAt(currentModIndexSelected);
+
+        if (ludeonMods.Contains(modBeingTested.Name))
+        {
+            nextMod();
+            return;
+        }
+
         var ticks = GenTicks.TicksPerRealSecond * secondsDelay;
 		if (GenTicks.TicksGame % ticks == 0)
 		{
@@ -41,14 +50,6 @@ public static class Map_MapPostTick
 		{
 			return;
 		}
-
-        ModContentPack modBeingTested = LoadedModManager.RunningMods.ElementAt(currentModIndexSelected);
-
-		if (ludeonMods.Contains(modBeingTested.Name))
-		{
-			nextMod();
-			return;
-        }
 
         Log.Message($"[Autotester]: Mod index  {currentModIndexSelected}  \"{modBeingTested.Name}\": checking thing index  {currentThingIndexSelected}");
 
@@ -128,7 +129,7 @@ public static class Map_MapPostTick
 		}
 
 		var autoTestMethod =
-				AccessTools.Method("SpawnModContent.DebugAutotests:SpawnModDefs", [typeof(ModContentPack)]);
+				AccessTools.Method(spawnModDefsStr, [typeof(ModContentPack)]);
 		if (autoTestMethod == null)
 		{
 			Log.Message($"[Autotester]: SpawnModContent not found.");

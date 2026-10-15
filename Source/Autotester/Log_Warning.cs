@@ -12,8 +12,6 @@ namespace Autotester;
 [HarmonyPatch(typeof(Log), nameof(Log.Warning))]
 public static class Log_Warning
 {
-    public static Action PendingDialog;
-
     public static void Prefix(ref string text, out bool __state)
     {
         __state = false;
