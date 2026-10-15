@@ -14,6 +14,7 @@ public class Main : Mod
         Settings.instance.init(content);
         Settings.instance.readSettings();
 
+        Log.Message($"[Autotester]: for RimWorld 1.7");
         Log.Message($"[Autotester]: Loaded settings");
         new Harmony("Mlie.Autotester").PatchAll(Assembly.GetExecutingAssembly());
     }
