@@ -12,14 +12,13 @@ namespace Autotester;
 [HarmonyPatch(typeof(Map), "MapPostTick")]
 public static class Map_MapPostTick
 {
-	private static String spawnModDefsStr = "SpawnModContent.DebugAutotests:spawnModDefs"
+	private static String spawnModDefsStr = "SpawnModContent.DebugAutotests:spawnModDefs";
     private static bool allowNextState = true;
     private static List<Thing> allSpawnedThings;
     private static int currentThingIndexSelected = 0;
     private static int currentModIndexSelected = 0;
 	private static float secondsDelay = 2;
-    private static int state = -1;
-	private static bool allModsSpawned = false;
+	private static int state = -1;
     private static List<String> ludeonMods = new List<string>() { "Anomaly", "Biotech", "Core", "Ideology", "Odyssey", "Royalty" };
 
     public static void Postfix()
