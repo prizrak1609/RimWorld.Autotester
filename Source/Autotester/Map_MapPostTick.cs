@@ -19,12 +19,18 @@ public static class Map_MapPostTick
     private static int currentModIndexSelected = 0;
 	private static float secondsDelay = 2;
 	private static int state = -1;
+	private static bool allModsTested = false;
     private static List<String> ludeonMods = new List<string>() { "Anomaly", "Biotech", "Core", "Ideology", "Odyssey", "Royalty" };
 
     public static void Postfix()
 	{
         if (currentModIndexSelected >= LoadedModManager.RunningMods.Count())
         {
+			if (!allModsTested)
+			{
+				Log.Message($"[Autotester]: No more mods to test");
+				allModsTested = true;
+			}
             return;
         }
 
